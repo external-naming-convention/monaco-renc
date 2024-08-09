@@ -15,7 +15,7 @@ type ENV = {
 		setmemorycategory: (tag: string) -> (),
 		resetmemorycategory: () -> (),
 
-		-- Krnl
+		-- RENC
 		getupvalue: (fn: function | number, index: number) -> any,
 		getupvalues: (fn: function | number) -> { [number]: any },
 		setupvalue: (fn: function | number, index: number, value: any) -> string?,
@@ -26,7 +26,7 @@ type ENV = {
 		getprotos: (fn: function | number) -> { [number]: function },
 		setstack: (fn: number, index: number, value: any) -> (),
 		getstack: (fn: number, index: number?) -> { [number]: any } | any,
-		getinfo: (fn: function | number) -> KrnlFunctionInfo,
+		getinfo: (fn: function | number) -> RENCFunctionInfo,
 		getregistry: () -> { [userdata | string | number]: any },
 	},
 	task: {
@@ -201,7 +201,7 @@ type ENV = {
 
 	-- Closure
 	hookfunction: (fn: function, hook: function) -> function,
-	iskrnlclosure: (fn: function) -> boolean,
+	isexecutorclosure: (fn: function) -> boolean,
 	iscclosure: (fn: function) -> boolean,
 	islclosure: (fn: function) -> boolean,
 	newcclosure: (fn: function) -> function,
@@ -220,7 +220,7 @@ type ENV = {
 	mousemoveabs: (X: number, Y: number) -> (),
 	mousescroll: (distance: number) -> (),
 
-	-- Reflection
+	-- Instances
 	setscriptable: (instance: Instance, property: string, scriptable: boolean) -> (),
 	gethiddenproperty: (instance: Instance, property: string) -> any,
 	getproperties: (instance: Instance) -> { [string]: any },
@@ -228,13 +228,17 @@ type ENV = {
 	sethiddenproperty: (instance: Instance, property: string, value: any) -> (),
 	getspecialinfo: (instance: Instance) -> { [string]: any },
 	fireclickdetector: (clickDetector: ClickDetector, distance: number?) -> (),
-	firetouchinterest: (part: Instance, otherPart: Instance, touchType: number) -> (),
-	fireproximityprompt: (proximityPrompt: ProximityPrompt) -> (),
-	getconnections: (signal: RBXScriptSignal) -> { [number]: KrnlConnection },
+	firetouchinterest: (part: Instance, touched: boolean?) -> (),
+	fireproximityprompt: (prompt: ProximityPrompt, triggered: boolean?, hold: boolean?) -> (),
+	firesignal: (object: Instance, signal: string?, args: any?) -> (),
+	getconnections: (signal: RBXScriptSignal) -> { [number]: Connection },
 	getinstances: () -> { [number]: Instance },
 	getnilinstances: () -> { [number]: Instance },
 	getcallbackvalue: (instance: Instance, property: string) -> function?,
 	getcallbackmember: (instance: Instance, property: string) -> function?,
+	getplayer: (name: string?) -> Instance,
+	getplayers: () -> { [string]: Instance },
+	runanimation: (animationId, player: Instance?) -> ()
 
 	-- Script
 	getscriptclosure: (script: LocalScript | ModuleScript) -> function,
@@ -307,7 +311,7 @@ type ENV = {
 		}>,
 	},
 
-	Krnl: {
+	RENC: {
 		Base64: {
 			Encode: (data: string) -> string,
 			Decode: (data: string) -> string,
@@ -317,9 +321,14 @@ type ENV = {
 		},
 	},
 	hookmetamethod: (object: any, metamethod: string, hook: function) -> function,
+	customprint: (text: string, properties: table, imageId: rbxasset?) -> (),
+	getfps: () -> number,
+	getping: () -> number,
+	getdevice: () -> string,
+	join: (PlaceId: number, JobId: string?) -> (),
 }
 
-type KrnlFunctionInfo = {
+type RENCFunctionInfo = {
 	name: string,
 	short_src: string,
 	what: string,
@@ -329,11 +338,11 @@ type KrnlFunctionInfo = {
 	source: string,
 }
 
-type KrnlConnection = {
+type Connection = {
 	Function: (...any) -> void,
-	Enable: (self: KrnlConnection) -> void,
-	Disable: (self: KrnlConnection) -> void,
-	Fire: (self: KrnlConnection, ...any) -> void,
+	Enable: (self: Connection) -> void,
+	Disable: (self: Connection) -> void,
+	Fire: (self: Connection, ...any) -> void,
 }
 
 type MessageBoxResult = number

@@ -752,8 +752,8 @@ end
 local function parseDocumentaion()
     if not m.Docs then
         m.Docs = json.decode(util.loadFile(ROOT / "api" / "API-Docs.json"))
-        m.KrnlDocs = json.decode(util.loadFile(ROOT / "api" / "Krnl-Docs.json"))
-        for k, v in pairs(m.KrnlDocs) do
+        m.RENCDocs = json.decode(util.loadFile(ROOT / "api" / "RENC-Docs.json"))
+        for k, v in pairs(m.RENCDocs) do
           m.Docs[k] = v
         end
     end
