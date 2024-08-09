@@ -28,4 +28,9 @@ jobs:
         cache: 'npm'
     - run: npm install
     - run: npm run build
-    - run: tree
+    
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.DEPLOYMENT_TOKEN }}
+        publish_dir: ./client/dist
